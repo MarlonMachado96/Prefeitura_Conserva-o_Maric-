@@ -1,119 +1,129 @@
-  <!DOCTYPE html>
-  <html lang="pt-BR">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Painel Admin - Limpeza Urbana</title>
-    <style>
-    body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 1rem;
-    background-color: #f7f7f7;
-    color: #333;
-  }
-
-  h1, h2 {
-    text-align: center;
-    margin: 0.5rem 0;
-  }
-
-  form {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 1rem;
-    background: white;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-
-  input, textarea, button {
-    width: 20%;
-    margin-top: 10px;
-    padding: 10px;
-    box-sizing: border-box;
-    border: 1px solid #000000;
-    border-radius: 500px;
-  }
-
-  textarea {
-    resize: vertical;
-  }
-
-  button {
-    background-color: #2196F3;
-    color: white;
-    border: none;
-    cursor: pointer;
-    transition: background 0.3s ease;
-  }
-
-  button:hover {
-    background-color: #1976D2;
-  }
-
-  #previewImagens {
-    flex-wrap: wrap;
-  }
-
-  #previewImagens img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  /* Responsividade */
-  @media (max-width: 600px) {
-    form {
-      padding: 0.8rem;
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Painel Admin - Limpeza Urbana</title>
+  <style>
+    * {
+      box-sizing: border-box;
     }
 
-    input, textarea, button {
-      font-size: 1rem;
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      overflow-x: hidden;
+      max-width: 100vw;
     }
 
-    #previewImagens {
+    h1, h2 {
+      text-align: center;
+      margin: 0.5rem 0;
+    }
+
+    #loginArea {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
+      min-height: 100vh;
+      text-align: center;
     }
-  }
 
+    #loginArea input,
+    #loginArea button {
+      width: 250px;
+      margin: 10px;
+      padding: 12px;
+      border-radius: 30px;
+      border: 1px solid #000;
+    }
 
-  #dadosChamados img {
-  max-width: 650px;   /* largura máxima para cada imagem */
-  height: auto;
-  margin: 10px;
-  border-radius: 6px;
-  object-fit: cover;
-  display: inline-block;  /* para ficar lado a lado com espaçamento */
-}
+    button {
+      background-color: #2196F3;
+      color: white;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
 
-/* Container dos chamados para espaçar cada chamado */
-.chamado-item {
-  margin-bottom: 20px;
-  border-bottom: 1px solid #ddd;
-  padding-bottom: 10px;
-}
+    button:hover {
+      background-color: #1976D2;
+    }
 
-/* Para garantir que a área do admin não tenha scroll horizontal */
-body, html {
-  overflow-x: hidden;
-  max-width: 100vw;
-}
+    #logoutBtn {
+      margin: 1rem auto;
+      display: block;
+      padding: 10px 20px;
+      border-radius: 20px;
+      background-color: #f44336;
+    }
 
-    </style>
-  </head>
-  <body>
+    #dadosChamados {
+      max-width: 800px;
+      margin: 2rem auto;
+      display: none;
+    }
 
-    <div id="loginArea">
-      <h2>Login Administrador</h2>
-      <input type="email" id="adminEmail" placeholder="Email" required />
-      <input type="password" id="adminSenha" placeholder="Senha" required />
-      <button id="loginBtn">Entrar</button>
-    </div>
+    .chamado-item {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      padding: 1rem;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #ddd;
+      position: relative;
+    }
 
-    <button id="logoutBtn">Sair</button>
+    .chamado-item img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
 
-    <div id="dadosChamados" style="display:none;"></div>
+    .btn-apagar {
+      margin-top: 10px;
+      padding: 8px 16px;
+      border-radius: 20px;
+      background-color: #f44336;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
 
-    <script type="module" src="admin.js"></script>
+    .btn-apagar:hover {
+      background-color: #d32f2f;
+    }
 
-  </body>
-  </html>
+    /* Responsivo */
+    @media (max-width: 600px) {
+      #loginArea input,
+      #loginArea button {
+        width: 90%;
+      }
+
+      #dadosChamados {
+        padding: 0 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loginArea">
+    <h2>Login Administrador</h2>
+    <input type="email" id="adminEmail" placeholder="Email" required />
+    <input type="password" id="adminSenha" placeholder="Senha" required />
+    <button id="loginBtn">Entrar</button>
+  </div>
+
+  <button id="logoutBtn">Sair</button>
+
+  <div id="dadosChamados"></div>
+
+  <script type="module" src="admin.js"></script>
+</body>
+</html>
