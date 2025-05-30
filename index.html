@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Registrar Solicitação de Limpeza</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  
+  <h2>BARROCO</h2>
+  
+  <h1>Registrar Solicitação de Limpeza</h1>
+
+  <form id="chamadoForm">
+    <input type="text" id="nome" placeholder="Seu nome" required />
+    <input type="tel" id="telefone" placeholder="Telefone para contato" required />
+    <input type="text" id="endereco" placeholder="Endereço do local" required />
+    <button type="button" onclick="obterLocalizacao()">Usar minha localização atual</button>
+    <p id="localizacaoTexto"></p>
+
+    <!-- Aqui o input agora aceita múltiplos arquivos -->
+    <input type="file" id="foto" accept="image/*" multiple required />
+    <!-- Div para mostrar o preview das imagens -->
+    <div id="previewImagens" style="display:flex; gap:10px; margin-top:10px;"></div>
+
+    <textarea id="observacoes" placeholder="Observações adicionais..."></textarea>
+    <button type="submit">Enviar Solicitação</button>
+  </form>
+
+  <button id="btnAdmin" style="margin-top:20px;">Área do Administrador</button>
+  <div id="mensagem"></div>
+
+  <script type="module" src="script.js"></script>
+  <script>
+    document.getElementById("btnAdmin").addEventListener("click", () => {
+      window.location.href = "admin.html";
+    });
+  </script>
+</body>
+</html>
