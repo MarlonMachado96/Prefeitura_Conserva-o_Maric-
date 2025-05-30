@@ -5,7 +5,6 @@ const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS
 
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-// Verifica se já está logado ao carregar a página
 if (localStorage.getItem('adminLogado') === 'true') {
   document.getElementById('loginArea').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'block';
@@ -27,35 +26,15 @@ async function loginAdmin() {
     .eq('email', email)
     .single();
 
-  if (error || !admin) {
+  if (error || !admin || senha !== admin.senha) {
     alert('Usuário ou senha inválidos');
     return;
   }
 
-  if (senha !== admin.senha) {
-    alert('Usuário ou senha inválidos');
-    return;
-  }
-
-  // Login OK
   localStorage.setItem('adminLogado', 'true');
   document.getElementById('loginArea').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'block';
   carregarChamados();
-}
-
-async function concluirChamado(id) {
-  const { error } = await supabase
-    .from('chamados')
-    .update({ concluido_em: new Date().toISOString() })
-    .eq('id', id);
-
-  if (error) {
-    alert('Erro ao concluir chamado: ' + error.message);
-  } else {
-    alert('Chamado marcado como concluído.');
-    carregarChamados(); // Atualiza a lista
-  }
 }
 
 async function carregarChamados() {
@@ -72,12 +51,12 @@ async function carregarChamados() {
     return;
   }
 
-  if (data.length === 0) {
+  if (!data || data.length === 0) {
     container.innerHTML += '<p>Nenhum chamado encontrado.</p>';
   } else {
     data.forEach((c) => {
       container.innerHTML += `
-        <div class="chamado">
+        <div class="chamado-item">
           <p><strong>Nome:</strong> ${c.nome}</p>
           <p><strong>Telefone:</strong> ${c.telefone}</p>
           <p><strong>Endereço:</strong> ${c.endereco}</p>
@@ -85,16 +64,52 @@ async function carregarChamados() {
           <p><strong>Data de abertura:</strong> ${new Date(c.criado_em).toLocaleString('pt-BR')}</p>
           <p><strong>Data de conclusão:</strong> ${c.concluido_em ? new Date(c.concluido_em).toLocaleString('pt-BR') : 'Não concluído'}</p>
           ${c.url_foto ? `<img src="${c.url_foto}" alt="Foto do chamado" />` : ''}
-          ${!c.concluido_em ? `<button onclick="concluirChamado('${c.id}')">Concluir chamado</button>` : ''}
+          <div style="margin-top: 10px;">
+            ${!c.concluido_em ? `<button onclick="concluirChamado('${c.id}')">Concluir chamado</button>` : ''}
+            <button class="btn-apagar" onclick="apagarChamado('${c.id}')">Apagar chamado</button>
+          </div>
         </div>
       `;
     });
   }
+
   container.style.display = 'block';
 }
 
-// Expor função ao escopo global para funcionar no onclick do botão
+async function concluirChamado(id) {
+  const { error } = await supabase
+    .from('chamados')
+    .update({ concluido_em: new Date().toISOString() })
+    .eq('id', id);
+
+  if (error) {
+    alert('Erro ao concluir chamado: ' + error.message);
+  } else {
+    alert('Chamado marcado como concluído.');
+    carregarChamados();
+  }
+}
+
+async function apagarChamado(id) {
+  const confirmar = confirm('Tem certeza que deseja apagar este chamado? Esta ação não poderá ser desfeita.');
+  if (!confirmar) return;
+
+  const { error } = await supabase
+    .from('chamados')
+    .delete()
+    .eq('id', id);
+
+  if (error) {
+    alert('Erro ao apagar chamado: ' + error.message);
+  } else {
+    alert('Chamado apagado com sucesso.');
+    carregarChamados();
+  }
+}
+
+// Tornar funções acessíveis no HTML
 window.concluirChamado = concluirChamado;
+window.apagarChamado = apagarChamado;
 
 document.getElementById('loginBtn').addEventListener('click', loginAdmin);
 
@@ -103,7 +118,6 @@ document.getElementById('logoutBtn').addEventListener('click', () => {
   document.getElementById('loginArea').style.display = 'block';
   document.getElementById('logoutBtn').style.display = 'none';
   document.getElementById('dadosChamados').style.display = 'none';
-
   document.getElementById('adminEmail').value = '';
   document.getElementById('adminSenha').value = '';
 });
